@@ -1,0 +1,8 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\car.obj",
+".\Objects\chaoshengbo.obj",
+".\Objects\delay.obj",
+".\Objects\oled.obj" 
+TO ".\Objects\cejv" 
+PRINT(".\Listings\cejv.m51")

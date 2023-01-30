@@ -1,0 +1,138 @@
+C51 COMPILER V9.54   MAIN                                                                  07/16/2022 17:43:51 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\keil5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.l
+                    -st) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "car.h"
+   2          #include "chaoshengbo.h"
+   3          #include "oled.h"
+   4          #include "oledrfront.h"
+*** WARNING C318 IN LINE 4 OF main.c: can't open file 'oledrfront.h'
+   5          #include "delay.h"
+   6          
+   7          
+   8          int speed;//ËÙ¶È
+   9          void UsartInit()//´®¿Ú¶¨Ê±Æ÷  //9600bps@11.0592MHz
+  10          {
+  11   1          PCON=0x00;    //¹Ø±¶Æµ
+  12   1          SCON = 0x50;    //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+  13   1          TMOD = 0x20;    //ÉèÖÃ¶¨Ê±Æ÷Ä£Ê½
+  14   1          TL1 = 0xFd;   //ÉèÖÃ¶¨Ê±³õÊ¼Öµ
+  15   1          TH1 = 0xFd;   //ÉèÖÃ¶¨Ê±³õÊ¼Öµ
+  16   1          ET1 = 0;    //½ûÖ¹¶¨Ê±Æ÷1ÖÐ¶Ï
+  17   1          TR1 = 1;    //¶¨Ê±Æ÷1¿ªÊ¼¼ÆÊ±
+  18   1          EA=1;  //×ÜÖÐ¶Ï
+  19   1          ES=1;  //´ò¿ª´®¿ÚÖÐ¶Ï
+  20   1      }
+  21          
+  22          void xianshi()
+  23          {   float dis;
+  24   1          OLED_ShowCHinese(0,0,3);//ËÙ  //µÚÒ»¸öÐÎ²ÎÊÇÁÐ£¬µÚ¶þ¸öÊÇÐÐ£¬µÚÈý¸öÊÇÏÔÊ¾ÄÄ¸öÖÐÎÄ£¬ÕâÀïÒ»¸ö×ÖÕ¼16¿í
+  25   1          OLED_ShowCHinese(18,0,4);//¶È
+  26   1          OLED_ShowCHinese(0,2,5);//Ä£
+  27   1          OLED_ShowCHinese(18,2,6);//Ê½
+  28   1          OLED_ShowCHinese(44,2,12);//²â
+  29   1          OLED_ShowCHinese(62,2,13);//¾à
+  30   1          OLED_ShowCHinese(0,4,13);//¾à
+  31   1          OLED_ShowCHinese(18,4,14);//Àë
+  32   1          //Õâ¸öº¯ÊýÏÔÊ¾×Ö·û
+  33   1          OLED_ShowString(36,0,":",16);//µÚÒ»¸öÐÎ²Î±íÊ¾µÚÁùÐÐ£¬µÚ¶þ¸öÐÎ²Î±íÊ¾ÅÅ£¬µÚÈý¸ö±íÊ¾Ð´ÈëµÄ×Ö·û£¬µÚËÄ¸ö±íÊ
+             -¾×ÖÌå´óÐ¡
+  34   1          OLED_ShowString(36,2,":",16);
+  35   1          OLED_ShowString(36,4,":",16);
+  36   1          OLED_ShowString(68,4,"cm",16);
+  37   1          //Õâ¸öº¯ÊýÏÔÊ¾Êý×Ö
+  38   1          dis=chaoshengbo(speed);
+  39   1          OLED_ShowNum(44,4,dis,3,16);    //µÚÒ»¸ö²ÎÊý±íÊ¾ÁÐ£¬µÚ¶þ¸ö²ÎÊý±íÊ¾ÐÐ£¬µÚÈý¸ö²ÎÊý±íÊ¾±äÁ¿Êý×Ö£¬µÚËÄ¸ö²ÎÊý
+             -±íÊ¾ÏÔÊ¾Êý×ÖµÄÎ»Êý£¬µÚÎå¸ö²ÎÊý±íÊ¾×ÖÌå´óÐ¡
+  40   1      }
+  41          
+  42          
+  43          
+  44          void main ()
+  45          {   UsartInit();
+  46   1          Timer2_init();
+  47   1          OLED_Init();      //³õÊ¼»¯OLED
+  48   1          OLED_Clear();     //ÇåÆÁº¯Êý
+  49   1          while(1) {
+  50   2              xianshi();
+  51   2          }
+C51 COMPILER V9.54   MAIN                                                                  07/16/2022 17:43:51 PAGE 2   
+
+  52   1      }
+  53          void Usart() interrupt 4    //´®¿ÚÖÐ¶Ï
+  54          {
+  55   1          unsigned char receiveData;
+  56   1          receiveData=SBUF;//½ÓÊÕµ½µÄÊý¾Ý
+  57   1          RI = 0;//Çå³ý½ÓÊÕÖÐ¶Ï±êÖ¾Î»
+  58   1          switch(receiveData)//¸ù¾ÝÊý¾ÝÖ´ÐÐ²Ù×÷
+  59   1          {
+  60   2          /***********************ËÙ¶ÈÇÐ»»******************************/
+  61   2          case 'a':
+  62   2              OLED_ShowCHinese(44,0,0);//Ò»
+  63   2              speed=30;
+  64   2              break;
+  65   2          case 'b':
+  66   2              OLED_ShowCHinese(44,0,1);//¶þ
+  67   2              speed=60;
+  68   2              break;
+  69   2          case 'c':
+  70   2              OLED_ShowCHinese(44,0,2);//Èý
+  71   2              speed=90;
+  72   2              break;
+  73   2          /***********************Ä£Ê½ÇÐ»»******************************/
+  74   2          case'f':
+  75   2                  OLED_ShowCHinese(44,2,16);//¸ú
+  76   2              OLED_ShowCHinese(62,2,17);//Ëæ
+  77   2              zs(speed);   //µ÷ÓÃ¸úËæ
+  78   2              break;
+  79   2          /***********************·½ÏòÇÐ»»******************************/
+  80   2          case '0':
+  81   2              car_stop(speed);
+  82   2              break;
+  83   2          case '1':
+  84   2              car_go(speed);
+  85   2              break;
+  86   2          case '2':
+  87   2              car_back(speed);
+  88   2              break;
+  89   2          case '3':
+  90   2              car_left(speed);
+  91   2              break;
+  92   2          case '4':
+  93   2              car_right(speed);
+  94   2              break;
+  95   2          case '5':
+  96   2              car_leftback(speed);
+  97   2              break;
+  98   2          case '6':
+  99   2              car_rightback(speed);
+ 100   2              break;
+ 101   2          }
+ 102   1      
+ 103   1          SBUF=receiveData; //½«½ÓÊÕµ½µÄÊý¾Ý·ÅÈëµ½·¢ËÍ¼Ä´æÆ÷
+ 104   1          while(!TI);      //µÈ´ý·¢ËÍÊý¾ÝÍê³É
+ 105   1          TI=0;           //Çå³ý·¢ËÍÍê³É±êÖ¾Î»
+ 106   1      }
+ 107          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    460    ----
+   CONSTANT SIZE    =      5    ----
+   XDATA SIZE       =   ----    ----
+C51 COMPILER V9.54   MAIN                                                                  07/16/2022 17:43:51 PAGE 3   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

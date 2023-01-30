@@ -1,0 +1,115 @@
+C51 COMPILER V9.54   MAIN                                                                  07/20/2022 17:45:19 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\keil5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.l
+                    -st) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <regx51.h>
+   2           #include <intrins.h>
+   3          sbit PWM=P3^0;  //¶¨Òå¸ø¶æ»úÐÅºÅÏß½ÓµÄI/O¿Ú
+   4           
+   5          void Delay(unsigned char i)   //12MHz ÑÓÊ±º¯Êý  
+   6          {
+   7   1          unsigned char a,b;        //¸Ã¶ÎÑÓÊ±º¯ÊýDelay(1)=0.5ms
+   8   1          for(;i>0;i--)
+   9   1            for(b=71;b>0;b--)
+  10   1              for(a=2;a>0;a--);
+  11   1      }
+  12          void delayms(int t)   //@11.0592MHz
+  13          {   while(t--) {
+  14   2              unsigned char i, j;
+  15   2      
+  16   2              _nop_();
+  17   2              i = 2;
+  18   2              j = 199;
+  19   2              do
+  20   2              {
+  21   3                  while (--j);
+  22   3              } while (--i);
+  23   2          }
+  24   1      }
+  25          /****************************************************************
+  26                                      ×ÜÖÜÆÚ20ms
+  27                          Í¨¹ýµ÷½ 9    9ÚÕ¼¿Õ±ÈÊµÏÖ¶æ»úÐèÒª×ª¶¯µÄ½Ç¶È
+  28          ¶æ»ú´úÂëÓÃ¶¨Ê±Æ÷¿ØÖÆ¸ü·½±ãÎÈ¶¨£¬±¾ÎÄ·½±ã¶ÁÕßÁË½âÊ¹ÓÃ£¬Ê¹ÓÃÑÓÊ±¼ÆËã
+  29                                   Æä¹¦ÄÜ¿ÉÕý³£Ê¹ÓÃ
+  30          *****************************************************************/
+  31          void zero(void) //0¶È ×Ó³ÌÐò
+  32          {   
+  33   1              PWM=1;
+  34   1              Delay(1);       //¸ßµçÆ½ Delay(1)=0.5ms¡£ÒòÎªÖÜÆÚÎª20ms£¬ËùÒÔµÍµçÆ½¾ÍÊÇ19.5ms 
+  35   1              PWM=0;
+  36   1              Delay(39);      //µÍµçÆ½ Delay(39)=19.5ms
+  37   1      }
+  38           
+  39          void one(void) //45¶È ×Ó³ÌÐò
+  40          {
+  41   1              PWM=1;
+  42   1              Delay(2);      //¸ßµçÆ½  Delay(2)=1ms
+  43   1              PWM=0;   
+  44   1              Delay(38);     //µÍµçÆ½  Delay(38)=19ms
+  45   1      }
+  46           
+  47          void two(void)  //90¶È ×Ó³ÌÐò
+  48          {
+  49   1               PWM=1;
+  50   1              Delay(3);       //¸ßµçÆ½ Delay(3)=1.5ms
+  51   1              PWM=0;
+  52   1              Delay(37);     //µÍµçÆ½  18.5ms
+  53   1      }
+  54           
+C51 COMPILER V9.54   MAIN                                                                  07/20/2022 17:45:19 PAGE 2   
+
+  55          void three(void) //135¶È ×Ó³ÌÐò
+  56          {
+  57   1              PWM=1;
+  58   1              Delay(4);       //¸ßµçÆ½ Delay(4)=2ms
+  59   1              PWM=0;
+  60   1              Delay(36);      //µÍµçÆ½ 18ms
+  61   1      }
+  62           
+  63          void four(void) //180¶È ×Ó³ÌÐò
+  64          {
+  65   1              PWM=1;
+  66   1              Delay(5);      //¸ßµçÆ½ Delay(5)=2.5ms
+  67   1              PWM=0;
+  68   1              Delay(35);     //µÍµçÆ½ 17.5ms
+  69   1      }
+  70           
+  71           
+  72          void main()  //Ö÷³ÌÐò
+  73          {
+  74   1      
+  75   1      two();
+  76   1      delayms(500);
+  77   1      three();
+  78   1      delayms(500);
+  79   1      two();
+  80   1      delayms(500);
+  81   1      one();
+  82   1      delayms(500);
+  83   1      
+  84   1      
+  85   1      
+  86   1      
+  87   1      }
+  88           
+  89          //end
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    143    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

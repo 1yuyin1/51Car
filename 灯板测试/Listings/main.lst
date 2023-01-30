@@ -1,0 +1,117 @@
+C51 COMPILER V9.54   MAIN                                                                  07/17/2022 13:59:57 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\keil5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.l
+                    -st) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include "delay.h"
+   3          
+   4          sbit SDA=P0^7;
+   5          sbit SCL=P0^6;
+   6          
+   7          
+   8          void IIC_start()
+   9          { SCL=1;
+  10   1        delayus(3);
+  11   1        SDA=1;
+  12   1        delayus(3);
+  13   1        SDA=0;
+  14   1        delayus(3);
+  15   1      }
+  16          void IIC_send(unsigned char send_data)
+  17          {  char i;
+  18   1        for(i = 0;i < 8;i++)
+  19   1        {
+  20   2            SCL=0;
+  21   2            delayus(3);
+  22   2            if(send_data & 0x01)
+  23   2            {
+  24   3              SDA=1;
+  25   3            }
+  26   2            else
+  27   2            {
+  28   3              SDA=0;
+  29   3            }
+  30   2            delayus(3);
+  31   2            SCL=1;
+  32   2            delayus(3);
+  33   2            send_data = send_data >> 1;
+  34   2        }
+  35   1      }
+  36          
+  37          void IIC_end()
+  38          {
+  39   1        SCL=0;
+  40   1        delayus(3);
+  41   1        SDA=0;
+  42   1        delayus(3);
+  43   1        SCL=1;
+  44   1        delayus(3);
+  45   1        SDA=1;
+  46   1        delayus(3);
+  47   1      }
+  48          
+  49          void matrix_display(unsigned char matrix_value[])
+  50          { int i;
+  51   1        IIC_start();  // use the function of the data transmission start condition
+  52   1        IIC_send(0xc0);  //select address
+  53   1        for(i = 0;i < 16;i++) //pattern data has 16 bits
+  54   1        {
+C51 COMPILER V9.54   MAIN                                                                  07/17/2022 13:59:57 PAGE 2   
+
+  55   2           IIC_send(matrix_value[i]); //convey the pattern data
+  56   2        }
+  57   1      
+  58   1        IIC_end();   //end the transmission of pattern data  
+  59   1        IIC_start();
+  60   1        IIC_send(0x8A);  //display control, set pulse width to 4/16 s
+  61   1        IIC_end();
+  62   1      }
+  63          
+  64          
+  65          unsigned char code smile[] = {0x00, 0x00, 0x1c, 0x02, 0x02, 0x02, 0x5c, 0x40, 0x40, 0x5c, 0x02, 0x02, 0x02
+             -, 0x1c, 0x00, 0x00};
+  66          unsigned char code Start [] ={0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,0x80,0x40,0x20,0x10,0x08,0x04,0x02,0
+             -x01};
+  67          unsigned char code Gofront []={0x00,0x00,0x00,0x00,0x00,0x00,0x24,0x12,0x09,0x12,0x24,0x00,0x00,0x00,0x00,
+             -0x00,0x00,0x00};
+  68          unsigned char code Goback []={0x00,0x00,0x00,0x00,0x00,0x00,0x24,0x48,0x90,0x48,0x24,0x00,0x00,0x00,0x00,0
+             -x00,0x00,0x00};
+  69          unsigned char code Turnleft []={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x44,0x28,0x10,0x44,0x28,0x10,0x44,0x28
+             -,0x10,0x00};
+  70          unsigned char code Turnright []={0x00,0x10,0x28,0x44,0x10,0x28,0x44,0x10,0x28,0x44,0x00,0x00,0x00,0x00,0x0
+             -0,0x00};
+  71          unsigned char code Stop []={0x2E,0x2A,0x3A,0x00,0x02,0x3E,0x02,0x00,0x3E,0x22,0x3E,0x00,0x3E,0x0A,0x0E,0x0
+             -0};
+  72          unsigned char code clear []={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x
+             -00,0x00,0x00};
+  73          
+  74          void boar(unsigned char image[])
+  75          {SCL=0;
+  76   1        SDA=0;
+  77   1      matrix_display(image);
+  78   1      
+  79   1      }
+  80          void main()
+  81          { 
+  82   1      boar(smile);
+  83   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    209    ----
+   CONSTANT SIZE    =    135    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

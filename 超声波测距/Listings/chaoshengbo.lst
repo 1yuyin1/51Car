@@ -1,0 +1,102 @@
+C51 COMPILER V9.54   CHAOSHENGBO                                                           07/16/2022 17:38:13 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE CHAOSHENGBO
+OBJECT MODULE PLACED IN .\Objects\chaoshengbo.obj
+COMPILER INVOKED BY: E:\keil5\C51\BIN\C51.EXE chaoshengbo.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\chaoshengbo.lst) TABS(2) OBJECT(.\Objects\chaoshengbo.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "car.h"
+   3          #include "delay.h"
+   4          #include "Intrins.h"
+   5          sbit Trig=P2^1;
+   6          sbit Echo=P2^0;
+   7          sbit OUT1 = P3^4; //避障左
+   8          sbit OUT2 = P3^5; //避障右
+   9          int flag;
+  10          float dist;
+  11          void Timer2_init()
+  12          {
+  13   1      
+  14   1          TMOD|= 0x01;//定时器2工作方式1
+  15   1          TH2=0x00;
+  16   1          TL2=0x00;
+  17   1          ET2=1;
+  18   1          EA=1;
+  19   1      }
+  20          
+  21          float chaoshengbo (int y)  //超声波测距程序
+  22          {
+  23   1          float dist;
+  24   1          Trig=1;       //触发信号是高电平脉冲，宽度大于10us
+  25   1          delayus(10);
+  26   1          Trig=0;
+  27   1          while(!Echo); //等待高电平
+  28   1          TR2=1;
+  29   1          while(Echo);  //等待低电平
+  30   1          TR2=0;
+  31   1          dist=TH2*256+TL2;//取出定时器值高8位和低8位合并
+  32   1          dist/=58;
+  33   1          TH2=0;
+  34   1          TL2=0;        //清除定时器0寄存器中的值
+  35   1        if(flag==1){
+  36   2            if(OUT1 == 1 && OUT2 == 0)
+  37   2          {
+  38   3              car_right(y);
+  39   3          }
+  40   2          else if(OUT1==0&&OUT2==1)
+  41   2          {
+  42   3              car_left(y);
+  43   3          }
+  44   2          else if(dist>3)
+  45   2          {
+  46   3              car_go(y);
+  47   3      
+  48   3          }
+  49   2          else if(dist>=2&&dist<=3)
+  50   2          {
+  51   3              car_stop(y);
+  52   3      
+  53   3          }
+  54   2          else if(dist<2)
+C51 COMPILER V9.54   CHAOSHENGBO                                                           07/16/2022 17:38:13 PAGE 2   
+
+  55   2          {
+  56   3              car_back(y);
+  57   3          }
+  58   2        }
+  59   1          return dist;
+  60   1      }
+  61          
+  62          void zs(int x)
+  63          { flag=1;
+  64   1        while(1)
+  65   1          {
+  66   2              chaoshengbo(x);
+  67   2          }
+  68   1      }
+  69          /*------------------------------------------------
+  70                           定时器中断子程序
+  71          ------------------------------------------------*/
+  72          void Timer2_Routine() interrupt 5
+  73          {
+  74   1          Echo=0;
+  75   1      }
+  76          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    266    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

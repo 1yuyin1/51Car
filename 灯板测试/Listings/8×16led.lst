@@ -1,0 +1,25 @@
+C51 COMPILER V9.54   8__16LED                                                              07/17/2022 11:31:04 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE 8__16LED
+OBJECT MODULE PLACED IN .\Objects\8¡Á16led.obj
+COMPILER INVOKED BY: E:\keil5\C51\BIN\C51.EXE 8¡Á16led.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\8¡
+                    -Á16led.lst) TABS(2) OBJECT(.\Objects\8¡Á16led.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
